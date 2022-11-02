@@ -8,9 +8,6 @@ const app = express();
 app.use(errorHandler);
 
 const port = appConfig.port;
-app.listen(
-    port,
-    (): void => {
-        logger.info(`App runing on port: ${port}`);
-    }
-)
+app.listen(port, (): void => {
+  logger.info(`App runing on port: ${port}`);
+});
