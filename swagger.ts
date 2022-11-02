@@ -7,7 +7,7 @@ const staticFolder = './public';
 if (!fs.existsSync(staticFolder)) fs.mkdirSync(staticFolder);
 
 const outputFile = './public/swagger.json';
-const endpointsFiles = ['./src/index.ts'];
+const endpointsFiles = ['./index.ts'];
 
 const doc = {
   info: {
@@ -20,18 +20,8 @@ const doc = {
   schemes: ['https'],
   consumes: ['application/json'],
   produces: ['application/json'],
-  tags: [
-    {
-      name: 'Company',
-      description: '',
-    },
-  ],
-  definitions: {
-    Company: {
-      $name: 'Company Name',
-      $cnpj: '11.111.111/0001-11',
-    },
-  },
+  tags: [],
+  definitions: {},
 };
 
 swaggerAutogen(outputFile, endpointsFiles, doc);

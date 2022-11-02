@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ValidationError } from 'yup';
-import AppError from '../../../shared/errors/AppError';
+import { AppError } from '../../../shared/errors/AppError';
 
 export const errorHandler = (
   error: any,

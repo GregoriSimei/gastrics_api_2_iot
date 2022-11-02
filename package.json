@@ -6,7 +6,7 @@
   "author": "GregoriSimei <gregorisimei@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "yarn swagger && NODE_ENV=development nodemon src/server.ts",
+    "start": "yarn swagger && SET NODE_ENV=development && nodemon ./index.ts",
     "swagger": "node swagger.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix"
