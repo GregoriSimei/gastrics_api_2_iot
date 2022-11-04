@@ -3,6 +3,7 @@ import express from 'express';
 import { appConfig } from './config/appConfig';
 import { errorHandler } from './infra/http/midlewares/errorHandler';
 import { logger } from './shared/loggers/logger';
+import './infra/listeners/index';
 
 const app = express();
 app.use(errorHandler);

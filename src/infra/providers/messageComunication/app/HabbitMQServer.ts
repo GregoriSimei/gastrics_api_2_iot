@@ -2,7 +2,7 @@ import { Channel, connect, Connection, Message } from 'amqplib';
 import { habbitMqConfig } from '../../../../config/habbitMqConfig';
 import { ICommunicationServer } from '../DTO/IComunicationServer';
 
-export class HabbitMQServer implements ICommunicationServer {
+export class RabbitMQServer implements ICommunicationServer {
   private conn: Connection;
   private channel: Channel;
 
