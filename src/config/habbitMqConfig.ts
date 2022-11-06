@@ -1,6 +1,6 @@
 export const habbitMqConfig = Object.freeze({
-  host: process.env.HABBITMQ_HOST,
-  port: process.env.HABBITMQ_PORT,
-  user: process.env.HABBITMQ_USER,
-  pass: process.env.HABBITMQ_PASS,
+  host: process.env.RABBITMQ_HOST,
+  port: process.env.RABBITMQ_PORT,
+  user: process.env.RABBITMQ_USER,
+  pass: process.env.RABBITMQ_PASS,
 });

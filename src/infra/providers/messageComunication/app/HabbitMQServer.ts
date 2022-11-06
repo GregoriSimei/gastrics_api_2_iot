@@ -1,4 +1,5 @@
 import { Channel, connect, Connection, Message } from 'amqplib';
+import { logger } from '../../../../shared/loggers/logger';
 import { habbitMqConfig } from '../../../../config/habbitMqConfig';
 import { ICommunicationServer } from '../DTO/IComunicationServer';
 
@@ -13,6 +14,8 @@ export class RabbitMQServer implements ICommunicationServer {
 
     this.conn = await connect(uri);
     this.channel = await this.conn.createChannel();
+
+    logger.info('RabbitMQ Connected');
   }
 
   async publishInQueue(queue: string, message: string): Promise<void> {

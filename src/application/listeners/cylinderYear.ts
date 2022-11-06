@@ -1,5 +1,5 @@
 import { logger } from '../../shared/loggers/logger';
-import { RabbitMQServer } from '../providers/messageComunication/app/HabbitMQServer';
+import { RabbitMQServer } from '../../infra/providers/messageComunication/app/HabbitMQServer';
 
 async function cylindersYear() {
   const server = new RabbitMQServer();
