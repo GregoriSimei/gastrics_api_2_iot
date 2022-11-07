@@ -1,9 +1,9 @@
 import { Channel, connect, Connection, Message } from 'amqplib';
 import { logger } from '../../../../shared/loggers/logger';
 import { habbitMqConfig } from '../../../../config/habbitMqConfig';
-import { ICommunicationServer } from '../DTO/IComunicationServer';
+import { IRabbitMQServer } from '../DTO/IRabbitMQServer';
 
-export class RabbitMQServer implements ICommunicationServer {
+export class RabbitMQServer implements IRabbitMQServer {
   private conn: Connection;
   private channel: Channel;
 

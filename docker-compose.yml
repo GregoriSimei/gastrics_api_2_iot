@@ -15,6 +15,17 @@ services:
     environment:
         - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
         - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+  mongodb:
+    image: mongo
+    container_name: 'mongodb'
+    env_file:
+        - ./.env
+    ports:
+      - ${MONGODB_PORT}:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASS}
+      - MONGO_INITDB_DATABASE=${MONGODB_NAME}
 
 networks:
   rabbitmq_go_net:
