@@ -1,21 +1,20 @@
 import * as mongoose from 'mongoose';
-import { mongodbConfig } from 'src/config/mongodbConfig';
-import { logger } from 'src/shared/loggers/logger';
+import { mongodbConfig } from '../../config/mongodbConfig';
+import { logger } from '../../shared/loggers/logger';
 
-const { host, pass, port, user, dbname } = mongodbConfig;
+const { host, pass, port, user } = mongodbConfig;
 
-const connectionString = `mongodb://${user}:${pass}@${host}:${port}/${dbname}?retryWrites=true&w=majority`;
+const connectionString = `mongodb://${user}:${pass}@${host}:${port}`;
 
-const db = mongoose.connect(connectionString);
+logger.info(`Connection string ${connectionString}`);
 
-mongoose.connection.on('connected', () => {
-  logger.info('[MONGOOSE] - connected');
-});
-mongoose.connection.on('error', (err) => {
-  logger.info('[MONGOOSE] - error -', err);
-});
-mongoose.connection.on('disconnected', (err) => {
-  logger.info('[MONGOOSE] - diconnect', err);
-});
+const dbConnection = mongoose
+  .connect(connectionString)
+  .then(() => {
+    logger.info('[MONGOOSE] - connected');
+  })
+  .catch((err) => {
+    logger.info('[MONGOOSE] - error -', err);
+  });
 
-export default db;
+export default dbConnection;
