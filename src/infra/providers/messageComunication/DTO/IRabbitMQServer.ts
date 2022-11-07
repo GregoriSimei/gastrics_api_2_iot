@@ -1,6 +1,7 @@
 import { Message } from 'amqplib';
 
 export interface IRabbitMQServer {
+  start(): Promise<void>;
   publishInQueue(queue: string, message: string): Promise<void>;
   publishInExchange(
     exchange: string,
