@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import './shared/environment/dotenv';
 import express from 'express';
 import { appConfig } from './config/appConfig';
