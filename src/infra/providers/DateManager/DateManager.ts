@@ -5,7 +5,7 @@ import { IDateManager } from './IDateManager';
 export class DateManager implements IDateManager {
   async getWeekDay(date: Date): Promise<string> {
     return date
-      .toLocaleString('default', {
+      .toLocaleString('en-us', {
         weekday: 'long',
         timeZone: 'America/Sao_Paulo',
       })
@@ -14,7 +14,7 @@ export class DateManager implements IDateManager {
 
   async getMonth(date: Date): Promise<string> {
     return date
-      .toLocaleString('default', {
+      .toLocaleString('en-us', {
         month: 'long',
         timeZone: 'America/Sao_Paulo',
       })
@@ -23,7 +23,7 @@ export class DateManager implements IDateManager {
 
   async getDay(date: Date): Promise<string> {
     return date
-      .toLocaleString('default', {
+      .toLocaleString('en-us', {
         day: 'numeric',
         timeZone: 'America/Sao_Paulo',
       })
@@ -32,7 +32,7 @@ export class DateManager implements IDateManager {
 
   async getYear(date: Date): Promise<string> {
     return date
-      .toLocaleString('default', {
+      .toLocaleString('en-us', {
         year: 'numeric',
         timeZone: 'America/Sao_Paulo',
       })
