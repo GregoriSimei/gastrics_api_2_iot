@@ -3,7 +3,7 @@ import { IDateManager } from './IDateManager';
 
 @injectable()
 export class DateManager implements IDateManager {
-  async getWeekDay(date: Date): Promise<string> {
+  getWeekDay(date: Date): string {
     return date
       .toLocaleString('en-us', {
         weekday: 'long',
@@ -12,7 +12,7 @@ export class DateManager implements IDateManager {
       .toLowerCase();
   }
 
-  async getMonth(date: Date): Promise<string> {
+  getMonth(date: Date): string {
     return date
       .toLocaleString('en-us', {
         month: 'long',
@@ -21,7 +21,7 @@ export class DateManager implements IDateManager {
       .toLowerCase();
   }
 
-  async getDay(date: Date): Promise<string> {
+  getDay(date: Date): string {
     return date
       .toLocaleString('en-us', {
         day: 'numeric',
@@ -30,12 +30,36 @@ export class DateManager implements IDateManager {
       .toLowerCase();
   }
 
-  async getYear(date: Date): Promise<string> {
+  getYear(date: Date): string {
     return date
       .toLocaleString('en-us', {
         year: 'numeric',
         timeZone: 'America/Sao_Paulo',
       })
       .toLowerCase();
+  }
+
+  getHour(date: Date): string {
+    const hourDescription = date
+      .toLocaleString('en-us', {
+        hour: 'numeric',
+        timeZone: 'America/Sao_Paulo',
+      })
+      .toLowerCase();
+
+    let sum = 0;
+    if (hourDescription.includes('pm')) {
+      sum = 12;
+    }
+
+    const hourWithoutNumber = hourDescription
+      .replace('pm', '')
+      .replace('am', '')
+      .replace(' ', '');
+
+    const hourNumber = parseInt(hourWithoutNumber);
+    const finalStringHour = (hourNumber + sum).toString();
+
+    return finalStringHour;
   }
 }
