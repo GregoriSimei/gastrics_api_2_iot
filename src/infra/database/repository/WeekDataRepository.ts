@@ -24,6 +24,11 @@ export class WeekDataRepository implements IWeekDataRepository {
     return weekDataFound;
   }
 
+  async findByExId(exId: string): Promise<IWeekData> {
+    const weekDataFound = await WeekDataModel.find({ exId });
+    return weekDataFound ? weekDataFound[0] : null;
+  }
+
   delete(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }

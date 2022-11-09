@@ -1,4 +1,6 @@
 import { IWeekData } from '../dto/IWeekData';
 import { IGenericRepository } from './IGenericRepository';
 
-export type IWeekDataRepository = IGenericRepository<IWeekData>;
+export interface IWeekDataRepository extends IGenericRepository<IWeekData> {
+  findByExId(exId: string): Promise<IWeekData>;
+}
