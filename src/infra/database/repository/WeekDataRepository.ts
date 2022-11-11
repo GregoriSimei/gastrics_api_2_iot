@@ -1,31 +1,55 @@
 import { IWeekData } from 'src/application/dto/IWeekData';
 import { IWeekDataRepository } from 'src/application/repository/IWeekDataRepository';
-import { WeekDataModel } from '../models/WeekData';
+import { CylinderAnalitcsModel } from '../models/CylinderAnalytics';
 
 export class WeekDataRepository implements IWeekDataRepository {
   async create(data: IWeekData): Promise<IWeekData> {
-    const createdWeekData = await WeekDataModel.create(data);
-    return createdWeekData;
+    throw new Error('Method not implemented');
   }
 
-  async update(id: string, data: IWeekData): Promise<IWeekData> {
-    await WeekDataModel.updateOne({ id }, data);
-    const updatedWeekData = await WeekDataModel.findById(id);
+  async createInAnalytics(exId: string, data: IWeekData): Promise<IWeekData> {
+    await CylinderAnalitcsModel.updateOne(
+      { exId },
+      {
+        $push: {
+          weeks: data,
+        },
+      },
+    );
+    const weekFound = await this.findByWeekDay(exId, data.weekDay);
+    return weekFound;
+  }
+
+  async update(exId: string, data: IWeekData): Promise<IWeekData> {
+    await CylinderAnalitcsModel.updateOne(
+      { 'weeks.weekDay': data.weekDay },
+      {
+        $set: {
+          'weeks.$': data,
+        },
+      },
+    );
+    const updatedWeekData = await this.findByWeekDay(exId, data.weekDay);
     return updatedWeekData;
   }
 
   async findAll(): Promise<IWeekData[]> {
-    const allWeekData = await WeekDataModel.find({});
-    return allWeekData;
+    throw new Error('Method not implemented');
   }
 
   async findById(id: string): Promise<IWeekData> {
-    const weekDataFound = await WeekDataModel.findById(id);
-    return weekDataFound;
+    throw new Error('Method not implemented');
   }
 
-  async findByExId(exId: string): Promise<IWeekData> {
-    const weekDataFound = await WeekDataModel.find({ exId });
+  async findByWeekDay(exId: string, weekDay: string): Promise<IWeekData> {
+    const cylinderAnalytics = await CylinderAnalitcsModel.find({
+      exId,
+      'weeks.weekDay': weekDay,
+    });
+    const weekDataFound = cylinderAnalytics[0]?.weeks?.find(
+      (weekData: IWeekData) => weekData.weekDay == weekDay,
+    );
+
     return weekDataFound ? weekDataFound[0] : null;
   }
 
