@@ -1,5 +1,5 @@
 export interface IDataPerHour {
-  hour: number;
+  hour: string;
   weigth: number;
   consumptionIT: number;
   consumptionAVG: number;
