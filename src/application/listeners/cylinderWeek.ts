@@ -5,9 +5,12 @@ import { IWeekDataRepository } from '../repository/IWeekDataRepository';
 import { WeekDataRepository } from '../../infra/database/repository/WeekDataRepository';
 import { IWeekData } from '../dto/IWeekData';
 import { ICylinderData } from '../dto/ICylinderData';
+import { DataGenerator } from '../../shared/DataGenerator/DataGenerator';
+import { IDataGenerator } from '../../shared/DataGenerator/IDataGenerator';
 
 const dateManager = new DateManager();
 const weekDataRepository: IWeekDataRepository = new WeekDataRepository();
+const dataGenerator: IDataGenerator = new DataGenerator();
 
 async function cylindersWeek() {
   const server = new RabbitMQServer();
@@ -18,21 +21,21 @@ async function cylindersWeek() {
 
     if (rabbitMessage) {
       const cylinderData: ICylinderData = JSON.parse(rabbitMessage);
-      logger.info(cylinderData);
 
       const dateNow = new Date();
       const weekDay = dateManager.getWeekDay(dateNow);
-      logger.info(weekDay);
 
       const hour = dateManager.getHour(dateNow);
-      logger.info(hour);
 
       const dataFound = await weekDataRepository.findByWeekDay(
         cylinderData.ex_id,
         weekDay,
       );
+      const dataExist = Boolean(dataFound);
 
-      logger.info(`TESTEEEEEE ${dataFound}`);
+      const weekDataToWork: IWeekData = dataExist
+        ? dataFound
+        : dataGenerator.getEmptyWeekData(weekDay);
     }
   });
 }
