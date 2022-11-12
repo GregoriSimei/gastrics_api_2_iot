@@ -6,9 +6,11 @@ import { errorHandler } from './infra/http/midlewares/errorHandler';
 import { logger } from './shared/loggers/logger';
 import './application/listeners/index';
 import './infra/database/index';
+import cors from 'cors';
 
 const app = express();
 app.use(errorHandler);
+app.use(cors());
 
 const port = appConfig.port;
 app.listen(port, (): void => {

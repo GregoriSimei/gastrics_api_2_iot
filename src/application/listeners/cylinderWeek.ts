@@ -7,14 +7,17 @@ import { IWeekData } from '../dto/IWeekData';
 import { ICylinderData } from '../dto/ICylinderData';
 import { DataGenerator } from '../../shared/DataGenerator/DataGenerator';
 import { IDataGenerator } from '../../shared/DataGenerator/IDataGenerator';
-import { ICalc } from 'src/shared/Calc/ICalc';
-import { Calc } from 'src/shared/Calc/Calc';
+import { ICalc } from '../../shared/Calc/ICalc';
+import { Calc } from '../../shared/Calc/Calc';
 import { IDataPerHour } from '../dto/DataPerHour';
+import { IGastricsAppClient } from '../../infra/requests/gastrics_app/interface/IGastricsAppClient';
+import { GastricsAppClient } from '../../infra/requests/gastrics_app/GastricsAppClient';
 
 const dateManager = new DateManager();
 const weekDataRepository: IWeekDataRepository = new WeekDataRepository();
 const dataGenerator: IDataGenerator = new DataGenerator();
 const calc: ICalc = new Calc();
+const gastricsAppClient: IGastricsAppClient = new GastricsAppClient();
 
 async function cylindersWeek() {
   const server = new RabbitMQServer();
@@ -25,14 +28,12 @@ async function cylindersWeek() {
 
     if (rabbitMessage) {
       const cylinderData: ICylinderData = JSON.parse(rabbitMessage);
+      const { ex_id } = cylinderData;
 
       const dateNow = new Date();
       const weekDay = dateManager.getWeekDay(dateNow);
 
-      const dataFound = await weekDataRepository.findByWeekDay(
-        cylinderData.ex_id,
-        weekDay,
-      );
+      const dataFound = await weekDataRepository.findByWeekDay(ex_id, weekDay);
 
       const weekDataToWork: IWeekData =
         dataFound || dataGenerator.getEmptyWeekData(weekDay);
@@ -45,8 +46,17 @@ async function cylindersWeek() {
       );
 
       // Precisa buscar os dados do cilindro para ver qual o peso do casco
+
+      const cylinderFound = await gastricsAppClient.getCylinderByExId(ex_id);
+      logger.info(cylinderFound);
+
       // Precisa remover o peso medio (ele não tem nenhuma função)
       // O trabalho maior vai estar no medidor de consumo
+      // Medir consumo médio geral (colocar no lugar do peso médio)
+      // Medir o consumo médio por hora
+      // Medir o consumo total por hora
+
+      // Ideia ==> Utilizar essa API para apenas gravar os dados e utilizar outra para fazer os calculos
     }
   });
 }

@@ -1,4 +1,4 @@
-import { gastrixApiAdapter } from 'src/infra/adapters/GastricsApiAdapter';
+import { gastrixApiAdapter } from '../../../infra/adapters/GastricsApiAdapter';
 import { ICylinder } from './dto/ICylinder';
 import { IGastricsAppClient } from './interface/IGastricsAppClient';
 
