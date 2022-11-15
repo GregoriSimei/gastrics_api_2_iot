@@ -16,7 +16,7 @@ export class DayDataRepository implements IDayDataRepository {
     return dayDataCreated;
   }
 
-  async findByDay(exId: string, day: Date): Promise<IDayData> {
+  async findByDay(exId: string, day: string): Promise<IDayData> {
     const cylinderDataFound = await CylinderAnalitcsModel.findOne({
       exId,
       'daysData.date': day,

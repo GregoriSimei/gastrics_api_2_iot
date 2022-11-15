@@ -1,5 +1,5 @@
 export interface IDayData {
-  date: Date;
+  date: string;
   weight: number;
   weightAVG: number;
   cylinderWeight: number;
