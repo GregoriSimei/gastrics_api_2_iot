@@ -1,5 +1,7 @@
 import { ICylinderAnalytics } from '../dto/ICylinderAnalytics';
 import { IGenericRepository } from './IGenericRepository';
 
-export type ICylinderAnalyticsRepository =
-  IGenericRepository<ICylinderAnalytics>;
+export interface ICylinderAnalyticsRepository
+  extends IGenericRepository<ICylinderAnalytics> {
+  findByExId(exId: string): Promise<ICylinderAnalytics>;
+}

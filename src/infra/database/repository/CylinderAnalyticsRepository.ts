@@ -25,6 +25,10 @@ export class CylinderAnalyticsRepository
     return await CylinderAnalitcsModel.findOne({ _id: id });
   }
 
+  async findByExId(exId: string): Promise<ICylinderAnalytics> {
+    return await CylinderAnalitcsModel.findOne({ exId });
+  }
+
   delete(id: string): Promise<void> {
     throw new Error('Method not implemented.');
   }

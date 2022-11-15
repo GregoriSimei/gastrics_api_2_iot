@@ -3,9 +3,8 @@ import { IWeekData } from './IWeekData';
 import { weeksLong } from './WeeksLong';
 
 export interface ICylinderAnalytics {
-  _id: string;
+  _id?: string;
   exId: string;
-  name: keyof weeksLong;
   weeks: IWeekData[];
   daysData: IDayData[];
 }
