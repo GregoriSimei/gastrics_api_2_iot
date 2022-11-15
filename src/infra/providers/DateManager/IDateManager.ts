@@ -4,4 +4,5 @@ export interface IDateManager {
   getDay(date: Date): string;
   getYear(date: Date): string;
   getHour(date: Date): string;
+  getOnlyDateInfo(date: Date): string;
 }
