@@ -26,80 +26,80 @@ async function cylindersWeek() {
     const rabbitMessage = message.content.toString();
     logger.info(`Week ==> ${rabbitMessage}`);
 
-    if (rabbitMessage) {
-      const cylinderData: ICylinderData = JSON.parse(rabbitMessage);
-      const { ex_id } = cylinderData;
+    // if (rabbitMessage) {
+    //   const cylinderData: ICylinderData = JSON.parse(rabbitMessage);
+    //   const { ex_id } = cylinderData;
 
-      const dateNow = new Date();
-      const weekDay = dateManager.getWeekDay(dateNow);
+    //   const dateNow = new Date();
+    //   const weekDay = dateManager.getWeekDay(dateNow);
 
-      const dataFound = await weekDataRepository.findByWeekDay(ex_id, weekDay);
+    //   const dataFound = await weekDataRepository.findByWeekDay(ex_id, weekDay);
 
-      const weekDataToWork: IWeekData =
-        dataFound || dataGenerator.getEmptyWeekData(weekDay);
+    //   const weekDataToWork: IWeekData =
+    //     dataFound || dataGenerator.getEmptyWeekData(weekDay);
 
-      let newWeekData = calcGeneralInfo(weekDataToWork, cylinderData);
-      newWeekData = calcHourInfo(
-        weekDataToWork,
-        cylinderData,
-        weekDataToWork.weigthAVG,
-      );
+    //   let newWeekData = calcGeneralInfo(weekDataToWork, cylinderData);
+    //   newWeekData = calcHourInfo(
+    //     weekDataToWork,
+    //     cylinderData,
+    //     weekDataToWork.weigthAVG,
+    //   );
 
-      // Precisa buscar os dados do cilindro para ver qual o peso do casco
+    //   // Precisa buscar os dados do cilindro para ver qual o peso do casco
 
-      const cylinderFound = await gastricsAppClient.getCylinderByExId(ex_id);
-      logger.info(cylinderFound);
+    //   const cylinderFound = await gastricsAppClient.getCylinderByExId(ex_id);
+    //   logger.info(cylinderFound);
 
-      // Precisa remover o peso medio (ele não tem nenhuma função)
-      // O trabalho maior vai estar no medidor de consumo
-      // Medir consumo médio geral (colocar no lugar do peso médio)
-      // Medir o consumo médio por hora
-      // Medir o consumo total por hora
+    // Precisa remover o peso medio (ele não tem nenhuma função)
+    // O trabalho maior vai estar no medidor de consumo
+    // Medir consumo médio geral (colocar no lugar do peso médio)
+    // Medir o consumo médio por hora
+    // Medir o consumo total por hora
 
-      // Ideia ==> Utilizar essa API para apenas gravar os dados e utilizar outra para fazer os calculos
-    }
+    // Ideia ==> Utilizar essa API para apenas gravar os dados e utilizar outra para fazer os calculos
+    // }
   });
 }
 
-function calcGeneralInfo(
-  weekData: IWeekData,
-  cylinderData: ICylinderData,
-): IWeekData {
-  const { iteration, weigthAVG } = weekData;
-  const { weigth } = cylinderData;
+// function calcGeneralInfo(
+//   weekData: IWeekData,
+//   cylinderData: ICylinderData,
+// ): IWeekData {
+//   const { iteration, weigthAVG } = weekData;
+//   const { weigth } = cylinderData;
 
-  if (weigth < weigthAVG) {
-    const newAvg = calc.getAvgByIteration(weigthAVG, weigth, iteration);
-    weekData.weigthAVG = newAvg;
-    weekData.iteration++;
-  }
+//   if (weigth < weigthAVG) {
+//     const newAvg = calc.getAvgByIteration(weigthAVG, weigth, iteration);
+//     weekData.weigthAVG = newAvg;
+//     weekData.iteration++;
+//   }
 
-  return weekData;
-}
+//   return weekData;
+// }
 
-function calcHourInfo(
-  weekData: IWeekData,
-  cylinderData: ICylinderData,
-  oldWeigth: number,
-): IWeekData {
-  const { dataPerHours } = weekData;
-  const { weigth } = cylinderData;
+// function calcHourInfo(
+//   weekData: IWeekData,
+//   cylinderData: ICylinderData,
+//   oldWeigth: number,
+// ): IWeekData {
+//   const { dataPerHours } = weekData;
+//   const { weigth } = cylinderData;
 
-  const dateNow = new Date();
-  const actualHour = dateManager.getHour(dateNow);
+//   const dateNow = new Date();
+//   const actualHour = dateManager.getHour(dateNow);
 
-  const dataPerHour = dataPerHours?.find(
-    (item: IDataPerHour) => item.hour == actualHour,
-  );
+//   const dataPerHour = dataPerHours?.find(
+//     (item: IDataPerHour) => item.hour == actualHour,
+//   );
 
-  const dataPerHourToWork =
-    dataPerHour || dataGenerator.getEmptyDataPerHour(actualHour);
+//   const dataPerHourToWork =
+//     dataPerHour || dataGenerator.getEmptyDataPerHour(actualHour);
 
-  if (oldWeigth > 0) {
-    const { consumption, consumptionAVG, consumptionIT } = dataPerHourToWork;
-  }
+//   if (oldWeigth > 0) {
+//     const { consumption, consumptionAVG, consumptionIT } = dataPerHourToWork;
+//   }
 
-  return weekData;
-}
+//   return weekData;
+// }
 
 cylindersWeek();
