@@ -62,4 +62,12 @@ export class DateManager implements IDateManager {
 
     return finalStringHour;
   }
+
+  getOnlyDateInfo(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
+  getSecoundsDiference(date1: Date, date2: Date): number {
+    return Math.abs(date1.getTime() - date2.getTime()) / 1000;
+  }
 }

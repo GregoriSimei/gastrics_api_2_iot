@@ -1,4 +1,5 @@
 export interface IDayData {
+  date: string;
   weight: number;
   weightAVG: number;
   cylinderWeight: number;
@@ -6,4 +7,6 @@ export interface IDayData {
   consumptionAVG: number;
   consumptionTot: number;
   hoursLeft: number;
+  iteration: number;
+  updatedAt: Date;
 }
