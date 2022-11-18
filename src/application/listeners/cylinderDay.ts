@@ -15,7 +15,7 @@ import { IDateManager } from '../../infra/providers/DateManager/IDateManager';
 import { IDayData } from '../dto/IDayData';
 import { Calc } from '../../shared/Calc/Calc';
 import { ICalc } from '../../shared/Calc/ICalc';
-import moment from 'moment';
+import { MQTTServer } from '../../infra/providers/messageComunication/app/MQTTServer';
 
 const gastricsAppClient: IGastricsAppClient = new GastricsAppClient();
 const dateManager: IDateManager = new DateManager();
@@ -26,15 +26,16 @@ const cylinderAnalyticsRepository: ICylinderAnalyticsRepository =
   new CylinderAnalyticsRepository();
 
 async function cylindersDay() {
-  const server = new RabbitMQServer();
+  const server = new MQTTServer();
   await server.start();
-  await server.consume('iot.cylinder.day', async (message) => {
-    const rabbitMessage = message.content.toString();
+  await server.consume('esp.test.balanca.tcc', async (message: any) => {
+    const rabbitMessage = message;
 
-    logger.info(`Day ==> ${message.content.toString()}`);
+    logger.info(`Day ==> ${message}`);
 
     if (rabbitMessage) {
       const cylinderData: ICylinderData = JSON.parse(rabbitMessage);
+      cylinderData.weight -= 7.16;
       const { ex_id } = cylinderData;
 
       const cylinderFound: ICylinder =
@@ -42,8 +43,6 @@ async function cylindersDay() {
 
       // If there is a cylinder with this ex_id, create the matrics
       if (cylinderFound) {
-        logger.info('Encontrou o cilindro');
-
         // Create CylinderAnalysis case not exist
         const analyticsFound = await cylinderAnalyticsRepository.findByExId(
           ex_id,
@@ -69,7 +68,6 @@ async function cylindersDay() {
             ex_id,
             generatedData,
           );
-          logger.info(`DayData Created`);
         }
 
         // Generete diary metrics
@@ -114,7 +112,8 @@ async function cylindersDay() {
         const runtime = dateManager.getSecoundsDiference(dateNow, updatedAt);
 
         if (runtime > 0 && runtime < maxSecoundsToUpdate) {
-          hoursLeft = ((gasWeight / consumption) * runtime) / 360;
+          const hoursLeftCalc = ((gasWeight / consumption) * runtime) / 360;
+          hoursLeft = hoursLeftCalc > 0 ? hoursLeftCalc : 0;
         }
 
         // Update Weight
