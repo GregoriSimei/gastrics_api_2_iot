@@ -8,5 +8,6 @@ export interface IDayData {
   consumptionTot: number;
   hoursLeft: number;
   iteration: number;
+  percentWeight: number;
   updatedAt: Date;
 }
