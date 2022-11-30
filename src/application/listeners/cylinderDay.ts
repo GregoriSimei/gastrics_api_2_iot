@@ -111,7 +111,7 @@ async function cylindersDay() {
         const maxSecoundsToUpdate = 2;
         const runtime = dateManager.getSecoundsDiference(dateNow, updatedAt);
 
-        if (runtime > 0 && runtime < maxSecoundsToUpdate) {
+        if (runtime > 0 && runtime < maxSecoundsToUpdate && consumptionTest) {
           const hoursLeftCalc = ((gasWeight / consumptionAVG) * runtime) / 360;
           hoursLeft = hoursLeftCalc > 0 ? hoursLeftCalc : 0;
         }
