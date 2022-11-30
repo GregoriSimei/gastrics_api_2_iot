@@ -12,5 +12,6 @@ export function emptyDayData(date: string): IDayData {
     updatedAt: new Date(),
     weight: 0,
     weightAVG: 0,
+    percentWeight: 0,
   };
 }

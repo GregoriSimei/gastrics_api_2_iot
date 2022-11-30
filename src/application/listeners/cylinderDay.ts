@@ -1,5 +1,4 @@
 import { logger } from '../../shared/loggers/logger';
-import { RabbitMQServer } from '../../infra/providers/messageComunication/app/HabbitMQServer';
 import { ICylinderData } from '../dto/ICylinderData';
 import { IGastricsAppClient } from '../../infra/requests/gastrics_app/interface/IGastricsAppClient';
 import { GastricsAppClient } from '../../infra/requests/gastrics_app/GastricsAppClient';
@@ -16,6 +15,7 @@ import { IDayData } from '../dto/IDayData';
 import { Calc } from '../../shared/Calc/Calc';
 import { ICalc } from '../../shared/Calc/ICalc';
 import { MQTTServer } from '../../infra/providers/messageComunication/app/MQTTServer';
+import { IAlert } from 'src/infra/requests/gastrics_app/dto/IAlert';
 
 const gastricsAppClient: IGastricsAppClient = new GastricsAppClient();
 const dateManager: IDateManager = new DateManager();
@@ -108,16 +108,24 @@ async function cylindersDay() {
         // HoursLeft Calc
         const gasWeight = weight - cylinderWeight;
 
-        const maxSecoundsToUpdate = 15;
+        const maxSecoundsToUpdate = 2;
         const runtime = dateManager.getSecoundsDiference(dateNow, updatedAt);
 
         if (runtime > 0 && runtime < maxSecoundsToUpdate) {
-          const hoursLeftCalc = ((gasWeight / consumption) * runtime) / 360;
+          const hoursLeftCalc = ((gasWeight / consumptionAVG) * runtime) / 360;
           hoursLeft = hoursLeftCalc > 0 ? hoursLeftCalc : 0;
         }
 
         // Update Weight
         weight = iotWeight;
+
+        // Update percent weight
+        const { alertWhen, maxWeight, weightShell } = cylinderFound;
+
+        const maxGasWeight = maxWeight - weightShell;
+        const realGasWeight = iotWeight - weightShell;
+
+        const actualPerCent = (realGasWeight * 100) / maxGasWeight;
 
         // Update Iteration num
         iteration++;
@@ -133,9 +141,27 @@ async function cylindersDay() {
           date: onlyDateString,
           updatedAt: new Date(),
           weightAVG: 0,
+          percentWeight: actualPerCent,
         };
 
         dayDataRepository.update(ex_id, dataToUpdate);
+
+        // Create Alert
+
+        if (actualPerCent <= alertWhen) {
+          const newAlert: IAlert = {
+            name: cylinderFound.name + ' - ' + cylinderFound.type,
+            type: 'Peso abaixo do limite',
+            status: 'warning',
+            cylinderExId: ex_id,
+          };
+
+          const company = await gastricsAppClient.findCompanyByExId(ex_id);
+
+          if (company) {
+            await gastricsAppClient.postAlert(company.id, newAlert);
+          }
+        }
       }
     }
   });
