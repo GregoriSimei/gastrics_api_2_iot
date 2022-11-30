@@ -1,5 +1,4 @@
 import { logger } from '../../shared/loggers/logger';
-import { RabbitMQServer } from '../../infra/providers/messageComunication/app/HabbitMQServer';
 import { ICylinderData } from '../dto/ICylinderData';
 import { IGastricsAppClient } from '../../infra/requests/gastrics_app/interface/IGastricsAppClient';
 import { GastricsAppClient } from '../../infra/requests/gastrics_app/GastricsAppClient';
@@ -109,7 +108,7 @@ async function cylindersDay() {
         // HoursLeft Calc
         const gasWeight = weight - cylinderWeight;
 
-        const maxSecoundsToUpdate = 15;
+        const maxSecoundsToUpdate = 2;
         const runtime = dateManager.getSecoundsDiference(dateNow, updatedAt);
 
         if (runtime > 0 && runtime < maxSecoundsToUpdate) {
@@ -149,7 +148,7 @@ async function cylindersDay() {
 
         // Create Alert
 
-        if (alertWhen <= actualPerCent) {
+        if (actualPerCent <= alertWhen) {
           const newAlert: IAlert = {
             name: cylinderFound.name + ' - ' + cylinderFound.type,
             type: 'Peso abaixo do limite',
